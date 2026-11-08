@@ -61,7 +61,7 @@ class MainScene extends Phaser.Scene {
 
     update() {
         if (this.square) {
-            const speed = 4;
+            const speed = 10;
             let moved = false;
 
             if (this.cursors.left.isDown || this.wasd.left.isDown) {
@@ -83,7 +83,7 @@ class MainScene extends Phaser.Scene {
             // Screen boundaries clamping (accounting for half the 32x32 square size)
             const halfSize = 16; 
             this.square.x = Phaser.Math.Clamp(this.square.x, halfSize, this.scale.width - halfSize);
-            this.square.y = Phaser.Math.Clamp(this.scale.height - halfSize, halfSize, this.scale.height - halfSize); // fixed bounds clamp reference
+            this.square.y = Phaser.Math.Clamp(this.square.y, halfSize, this.scale.height - halfSize);
 
             if (moved) {
                 this.socket.emit('playerMovement', { x: this.square.x, y: this.square.y });
@@ -105,7 +105,7 @@ const config = {
         autoCenter: Phaser.Scale.CENTER_BOTH
     },
     backgroundColor: '#222222',
-    roundPixels: true, // Crucial for snapping coordinates to whole pixels
+    roundPixels: true, // Snaps coordinates to whole pixels to eliminate motion blur/trails
     scene: [MainScene]
 };
 

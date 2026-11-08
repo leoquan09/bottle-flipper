@@ -6,10 +6,10 @@ const config = {
     height: window.innerHeight,
     physics: {
         default: 'arcade',
-        arcade: { debug: true }
+        arcade: { debug: true, gravity: { y: 300 } }
     },
     scale: {
-        mode: Phaser.Scale.RESIZE,
+        mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH
     },
     backgroundColor: '#222222',

@@ -8,7 +8,7 @@ export default class MainScene extends Phaser.Scene {
 
     create() {
         this.network = new NetworkManager(this);
-        this.otherPlayers = this.add.group();
+        this.otherPlayers = this.physics.add.group();
 
         this.cursors = this.input.keyboard.createCursorKeys();
         this.wasd = this.input.keyboard.addKeys({

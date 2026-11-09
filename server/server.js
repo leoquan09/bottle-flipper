@@ -25,7 +25,7 @@ io.on('connection', (socket) => {
 
   players[socket.id] = {
     x: Math.floor(Math.random() * 700) + 50,
-    y: Math.floor(Math.random() * 500) + 50,
+    y: 50,
     it: false,
     playerId: socket.id
   };

@@ -37,10 +37,15 @@ export default class MainScene extends Phaser.Scene {
     update() {
         if (this.player) {
             const moved = this.player.move(this.cursors, this.wasd, this.scale.width, this.scale.height);
+            const shot = this.player.shoot(this.cursors);
 
             if (moved) {
                 this.network.emitMovement(this.player.x, this.player.y);
             }
+            
+            // if (shot) {
+            //     this.
+            // }
         }
         
     }

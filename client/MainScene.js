@@ -1,5 +1,5 @@
 import NetworkManager from './NetworkManager.js';
-import Player from '/Player.js';
+import Player from './Player.js';
 
 export default class MainScene extends Phaser.Scene {
     constructor() {
@@ -19,14 +19,20 @@ export default class MainScene extends Phaser.Scene {
         });
     }
 
+    
+
     addPlayer(playerInfo) {
         this.player = new Player(this, playerInfo.x, playerInfo.y, 0x00ff00, playerInfo.playerId);
-    }
+        this.physics.add.overlap(this.player, this.otherPlayers, () => {
+            this.player.x = playerInfo.x;
+            this.player.y = playerInfo.y;
+        });
+    };
 
     addOtherPlayer(playerInfo) {
         const otherPlayer = new Player(this, playerInfo.x, playerInfo.y, 0xff0000, playerInfo.playerId);
         this.otherPlayers.add(otherPlayer);
-    }
+    };
 
     update() {
         if (this.player) {
@@ -36,5 +42,6 @@ export default class MainScene extends Phaser.Scene {
                 this.network.emitMovement(this.player.x, this.player.y);
             }
         }
+        
     }
 }

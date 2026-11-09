@@ -6,7 +6,7 @@ const config = {
     height: window.innerHeight,
     physics: {
         default: 'arcade',
-        arcade: { debug: true, gravity: { y: 300 } }
+        arcade: { debug: true }
     },
     scale: {
         mode: Phaser.Scale.FIT,

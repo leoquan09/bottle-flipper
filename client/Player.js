@@ -1,9 +1,13 @@
 export default class Player extends Phaser.GameObjects.Rectangle {
     constructor(scene, x, y, color, playerId) {
         super(scene, x, y, 32, 32, color);
-        scene.add.existing(this);
+        scene.physics.add.existing(this);
         this.playerId = playerId;
-        this.speed = 10;
+        this.speed = 4;
+    }
+
+    checkalive() {
+        if(this.y === 10) { alert('hi')}
     }
 
     move(cursors, wasd, sceneWidth, sceneHeight) {
@@ -30,5 +34,8 @@ export default class Player extends Phaser.GameObjects.Rectangle {
         this.y = Phaser.Math.Clamp(this.y, halfSize, sceneHeight - halfSize);
 
         return moved;
+
+
     }
 }
+

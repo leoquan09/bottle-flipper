@@ -26,6 +26,7 @@ io.on('connection', (socket) => {
   players[socket.id] = {
     x: Math.floor(Math.random() * 700) + 50,
     y: Math.floor(Math.random() * 500) + 50,
+    it: false,
     playerId: socket.id
   };
 
@@ -40,7 +41,6 @@ io.on('connection', (socket) => {
     if (players[socket.id]) {
       players[socket.id].x = movementData.x;
       players[socket.id].y = movementData.y;
-      // Send updated position to all other players
       socket.broadcast.emit('playerMoved', players[socket.id]);
     }
   });

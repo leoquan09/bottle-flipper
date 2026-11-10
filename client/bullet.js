@@ -4,10 +4,25 @@ export default class Bullet extends Phaser.GameObjects.Arc {
         
         scene.add.existing(this);
         scene.physics.add.existing(this);
+
         this.body.setCircle(5);
+        this.body.setCollideWorldBounds(true);
+        this.body.onWorldBounds = true;
+
+        this.deactivateBullet();
+
+        scene.physics.world.on('worldbounds', (body) => {
+            if (body.gameObject === this) {
+                this.deactivateBullet(); 
+            }
+        });
+    }
+
+    deactivateBullet() {
         this.active = false;
-        this.width = scene.sys.game.config.width;
-        this.height = scene.sys.game.config.width;
+        this.visible = false;
+        this.body.enable = false;
+        this.body.setVelocity(0, 0);
     }
 
     resetPosition(x, y) {
@@ -15,12 +30,14 @@ export default class Bullet extends Phaser.GameObjects.Arc {
         this.body.reset(x, y);
     }
 
-    shoot(x, y) {
-        const angle = Phaser.Math.Angle.Between(this.x, this.y, x, y);
+    shoot(startX, startY, targetX, targetY) {
+        this.resetPosition(startX, startY);
+        this.body.enable = true;
+        this.visible = true;
+        this.active = true;
+
+        const angle = Phaser.Math.Angle.Between(startX, startY, targetX, targetY);
+        
         this.scene.physics.velocityFromRotation(angle, 2500, this.body.velocity);
-        while (this.x < this.width && this.x > 0 && this.y < this.height && this.x > 0) {
-            this.active = true;
-        }
-        this.active = false;
     }
 }

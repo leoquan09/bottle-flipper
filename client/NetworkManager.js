@@ -35,9 +35,17 @@ export default class NetworkManager {
                 }
             });
         });
+
+        this.socket.on('enemyShot', (bulletInfo) => {
+            this.scene.addEnemyBullet(bulletInfo.x, bulletInfo.y, bulletInfo.angle, bulletInfo.playerID);
+        });
     }
 
     emitMovement(x, y) {
         this.socket.emit('playerMovement', { x, y });
+    }
+
+    emitShot(bulletData) {
+        this.socket.emit('playerShot', bulletData);
     }
 }

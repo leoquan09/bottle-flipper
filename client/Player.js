@@ -3,37 +3,34 @@ import Bullet from './bullet.js';
 export default class Player extends Phaser.GameObjects.Rectangle {
     constructor(scene, x, y, color, playerId) {
         super(scene, x, y, 32, 32, color);
+
         scene.add.existing(this);
         scene.physics.add.existing(this);
+
         this.playerId = playerId;
         this.speed = 4;
-        this.canShoot = true;
         this.pointer = scene.input.activePointer;
         
-        this.bullets = scene.add.group({
-            classType: Bullet,
-            runChildUpdate: true
-        });
+        this.bullet = new Bullet(scene, x, y, 0xB6B5B8); 
     }
 
     shoot(cursors) {
-        if (!this.canShoot) {
+        if (this.bullet.active) {
             return false;
         };
-
+        
         if (cursors.space.isDown) {
-            this.bullet.resetPosition(this.x, this.y);
-            this.bullet.shoot(this.pointer.x, this.pointer.y);
-            this.canShoot = false;
-            this.scene.time.delayedCall(500, () => {
-                this.canShoot = true;
-                this.bullet.resetPosition(-10, -10);
-            });
-            return true;
+            const angle = Phaser.Math.Angle.Between(this.x, this.y, this.pointer.worldX, this.pointer.worldY);
+            this.bullet.shoot(this.x, this.y, this.pointer.worldX, this.pointer.worldY);
+            return {
+                x: this.x,
+                y: this.y,
+                angle: angle
+            };
         };
 
         return false;
-    }
+    };
 
     move(cursors, wasd, sceneWidth, sceneHeight) {
         let moved = false;

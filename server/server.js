@@ -21,35 +21,36 @@ app.use(express.static(path.join(__dirname, '..', 'client')));
 
 
 io.on('connection', (socket) => {
-  console.log(`[Connected] Player joined with ID: ${socket.id}`);
+    console.log(`[Connected] Player joined with ID: ${socket.id}`);
 
-  players[socket.id] = {
-    x: Math.floor(Math.random() * 700) + 50,
-    y: 50,
-    it: false,
-    playerId: socket.id
-  };
+    players[socket.id] = {
+      x: Math.floor(Math.random() * 700) + 50,
+      y: Math.floor(Math.random() * 700) + 50,
+      it: false,
+      playerId: socket.id
+    };
 
-  // Send existing players to the newly connected player
-  socket.emit('currentPlayers', players);
+    socket.emit('currentPlayers', players);
 
-  // Broadcast the new player to all other connected clients
-  socket.broadcast.emit('newPlayer', players[socket.id]);
+    socket.broadcast.emit('newPlayer', players[socket.id]);
 
-  // Handle incoming movement coordinates from this player
-  socket.on('playerMovement', (movementData) => {
-    if (players[socket.id]) {
-      players[socket.id].x = movementData.x;
-      players[socket.id].y = movementData.y;
-      socket.broadcast.emit('playerMoved', players[socket.id]);
-    }
-  });
+    socket.on('playerMovement', (movementData) => {
+      if (players[socket.id]) {
+        players[socket.id].x = movementData.x;
+        players[socket.id].y = movementData.y;
+        socket.broadcast.emit('playerMoved', players[socket.id]);
+      }
+    });
 
-  socket.on('disconnect', () => {
-    console.log(`[Disconnected] Player left: ${socket.id}`);
-    delete players[socket.id];
-    io.emit('removePlayer', socket.id);
-  });
+    socket.on('playerShot', (data) => {
+      socket.broadcast.emit('enemyShot', { x: data.x, y: data.y, angle: data.angle, playerID: socket.id });
+    });
+
+    socket.on('disconnect', () => {
+      console.log(`[Disconnected] Player left: ${socket.id}`);
+      delete players[socket.id];
+      io.emit('removePlayer', socket.id);
+    });
 });
 
 app.get('/', (req, res) => {

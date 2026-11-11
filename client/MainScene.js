@@ -8,8 +8,11 @@ export default class MainScene extends Phaser.Scene {
 
     create() {
         this.network = new NetworkManager(this);
-        this.otherPlayers = this.physics.add.group();
 
+        this.otherPlayers = this.physics.add.group();
+        this.localPlayers = this.physics.add.group();
+
+        this.myBullets = this.physics.add.group();
         this.enemyBullets = this.physics.add.group();
 
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -23,6 +26,16 @@ export default class MainScene extends Phaser.Scene {
         this.scale.on('resize', (gameSize) => {
             this.physics.world.setBounds(0, 0, gameSize.width, gameSize.height);
         });
+
+        this.physics.add.overlap(this.localPlayers, this.enemyBullets, (player, bullet) => {
+            bullet.deactivateBullet();
+            alert('You got hit');
+        });
+
+        this.physics.add.overlap(this.myBullets, this.otherPlayers, (bullet, player) => {
+            bullet.deactivateBullet();
+            alert('You hit someone');
+        });
     }
 
     
@@ -34,6 +47,8 @@ export default class MainScene extends Phaser.Scene {
             this.player.x = playerInfo.x;
             this.player.y = playerInfo.y;
         });
+        this.myBullets.add(this.player.bullet);
+        this.localPlayers.add(this.player);
     };
 
     addOtherPlayer(playerInfo) {
@@ -41,6 +56,7 @@ export default class MainScene extends Phaser.Scene {
         otherPlayer.bullet.setFillStyle(0xff0000);
 
         this.otherPlayers.add(otherPlayer);
+        this.enemyBullets.add(otherPlayer.bullet);
     };
 
     addEnemyBullet(x, y, angle, shooterId) {
@@ -73,7 +89,16 @@ export default class MainScene extends Phaser.Scene {
             if (shot) {
                 this.network.emitShot(shot);
             }
+
+            if (this.player.bullet.active && !this.physics.world.bounds.contains(this.player.bullet.x, this.player.bullet.y)) {
+                this.player.bullet.deactivateBullet(); 
+            }
         }
-        
+
+        this.otherPlayers.getChildren().forEach((otherPlayer) => {
+            if (otherPlayer.bullet.active && !this.physics.world.bounds.contains(otherPlayer.bullet.x, otherPlayer.bullet.y)) {
+                otherPlayer.bullet.deactivateBullet();
+            }
+        });
     }
 }

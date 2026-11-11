@@ -31,8 +31,8 @@ export default class Bullet extends Phaser.GameObjects.Arc {
     }
 
     shoot(startX, startY, targetX, targetY) {
-        this.resetPosition(startX, startY);
         this.body.enable = true;
+        this.resetPosition(startX, startY);
         this.visible = true;
         this.active = true;
 

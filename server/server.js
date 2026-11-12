@@ -46,6 +46,10 @@ io.on('connection', (socket) => {
       socket.broadcast.emit('enemyShot', { x: data.x, y: data.y, angle: data.angle, playerID: socket.id });
     });
 
+    socket.on('playerScore', (data) => {
+      socket.broadcast.emit('scoreUpdate', { score: data, id: socket.id });
+    })
+
     socket.on('disconnect', () => {
       console.log(`[Disconnected] Player left: ${socket.id}`);
       delete players[socket.id];

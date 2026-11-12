@@ -10,6 +10,7 @@ export default class Player extends Phaser.GameObjects.Rectangle {
         this.playerId = playerId;
         this.speed = 4;
         this.pointer = scene.input.activePointer;
+        this.kills = 0;
         
         this.bullet = new Bullet(scene, x, y, 0xB6B5B8); 
     }
@@ -56,6 +57,11 @@ export default class Player extends Phaser.GameObjects.Rectangle {
         this.y = Phaser.Math.Clamp(this.y, halfSize, sceneHeight - halfSize);
 
         return moved;
+    }
+
+    die() {
+        this.x = Math.random() * 800;
+        this.y = Math.random() * 800;
     }
 }
 

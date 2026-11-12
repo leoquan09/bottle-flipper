@@ -39,6 +39,16 @@ export default class NetworkManager {
         this.socket.on('enemyShot', (bulletInfo) => {
             this.scene.addEnemyBullet(bulletInfo.x, bulletInfo.y, bulletInfo.angle, bulletInfo.playerID);
         });
+
+        this.socket.on('scoreUpdate', (data) => {
+            let children = this.scene.otherPlayers.getChildren();
+            children.forEach((child) => {
+                if (child.playerId === data.id) {
+                    child.kills = data.score;
+                }
+            });
+            console.log(children);
+        });
     }
 
     emitMovement(x, y) {
@@ -47,5 +57,9 @@ export default class NetworkManager {
 
     emitShot(bulletData) {
         this.socket.emit('playerShot', bulletData);
+    }
+
+    emitScore(score) {
+        this.socket.emit('playerScore', score);
     }
 }

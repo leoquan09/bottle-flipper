@@ -29,12 +29,15 @@ export default class MainScene extends Phaser.Scene {
 
         this.physics.add.overlap(this.localPlayers, this.enemyBullets, (player, bullet) => {
             bullet.deactivateBullet();
-            alert('You got hit');
+            player.die();
+            this.network.emitMovement(player.x, player.y);
         });
 
         this.physics.add.overlap(this.myBullets, this.otherPlayers, (bullet, player) => {
             bullet.deactivateBullet();
-            alert('You hit someone');
+            let children = this.localPlayers.getChildren();
+            children[0].kills += 1;
+            this.network.emitScore(children[0].kills);
         });
     }
 

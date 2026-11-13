@@ -1,16 +1,17 @@
 import Bullet from './bullet.js';
 
 export default class Player extends Phaser.GameObjects.Rectangle {
-    constructor(scene, x, y, color, playerId) {
+    constructor(scene, x, y, color, playerId, playerName, playerScore) {
         super(scene, x, y, 32, 32, color);
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
         this.playerId = playerId;
+        this.playerName = playerName;
         this.speed = 4;
         this.pointer = scene.input.activePointer;
-        this.kills = 0;
+        this.kills = playerScore;
         
         this.bullet = new Bullet(scene, x, y, 0xB6B5B8); 
     }

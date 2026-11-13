@@ -1,5 +1,6 @@
 import NetworkManager from './NetworkManager.js';
 import Player from './Player.js';
+import { Leaderboard } from './leaderBoard.js';
 
 export default class MainScene extends Phaser.Scene {
     constructor() {
@@ -39,12 +40,14 @@ export default class MainScene extends Phaser.Scene {
             children[0].kills += 1;
             this.network.emitScore(children[0].kills);
         });
+
+        this.leaderboard = new Leaderboard(this, 20, 20, this.localPlayers, this.otherPlayers);
     }
 
     
 
     addPlayer(playerInfo) {
-        this.player = new Player(this, playerInfo.x, playerInfo.y, 0x00ff00, playerInfo.playerId);
+        this.player = new Player(this, playerInfo.x, playerInfo.y, 0x00ff00, playerInfo.playerId, playerInfo.nane, playerInfo.score);
         this.player.bullet.setFillStyle(0x00ff00);
         this.physics.add.overlap(this.player, this.otherPlayers, () => {
             this.player.x = playerInfo.x;
@@ -55,7 +58,7 @@ export default class MainScene extends Phaser.Scene {
     };
 
     addOtherPlayer(playerInfo) {
-        const otherPlayer = new Player(this, playerInfo.x, playerInfo.y, 0xff0000, playerInfo.playerId);
+        const otherPlayer = new Player(this, playerInfo.x, playerInfo.y, 0xff0000, playerInfo.playerId, playerInfo.name, playerInfo.score);
         otherPlayer.bullet.setFillStyle(0xff0000);
 
         this.otherPlayers.add(otherPlayer);

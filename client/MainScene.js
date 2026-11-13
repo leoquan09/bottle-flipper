@@ -1,6 +1,6 @@
 import NetworkManager from './NetworkManager.js';
 import Player from './Player.js';
-import { Leaderboard } from './leaderboard.js';
+import { Leaderboard } from './leaderBoard.js';
 
 export default class MainScene extends Phaser.Scene {
     constructor() {
